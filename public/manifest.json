@@ -1,0 +1,17 @@
+{
+    "manifest_version": 3,
+    "name": "Update Master",
+    "version": "1.0",
+    "description": "Generate quick updates or emails based on context.",
+    "action": {
+        "default_popup": "index.html"
+    },
+    "permissions": [
+        "scripting",
+        "tabs"
+    ],
+    "host_permissions": [
+        "https://*/*",
+        "http://*/*"
+    ]
+}
