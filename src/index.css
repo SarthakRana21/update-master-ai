@@ -27,11 +27,6 @@ body {
   font-size: 0.9rem;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -43,11 +38,6 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
   margin-bottom: 20px;
-}
-
-::placeholder {
-  color: #f9f9f9;
-  opacity: 1;
 }
 
 button:hover {
