@@ -75,7 +75,7 @@
   background: #888; 
   width: 7px;
   border-radius: 20px;
-  cursor: pointer; 
+  cursor: grabbing; 
 }
 
 /* Handle on hover */
