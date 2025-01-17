@@ -22,7 +22,7 @@ const Home = () => {
         },
         (response) => {
             if (response.success) {
-              setResponse(response.data)
+              setResponse(response.data.choices[0].message.content)
             } else {
                 console.error("API Error:", response.error);
             }

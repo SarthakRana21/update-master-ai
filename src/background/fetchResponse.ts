@@ -28,7 +28,7 @@ async function handleApiRequest(context: string) {
         const data = {
             model: "gpt-4o-mini",
             store: true,
-            message: [
+            messages: [
                 { role: 'assistant', content: prompt},
                 { role: 'user', content: context }
             ],
