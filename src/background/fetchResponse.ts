@@ -22,17 +22,17 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 async function handleApiRequest(context: string) {
     const url = "https://api.openai.com/v1/chat/completions";
 
-    const prompt = "You are Project Manager, an AI-powered assistant that generates quick, polished updates or emails based on provided context. Your task is to transform user input into clear, professional communication, whether it’s for client updates, project reports, or any other formal communication. Ensure the tone is appropriate, concise, and relevant to the situation, and always strive for clarity and professionalism. try to keep it short and on point";
+    const prompt ="Analyze the provided context and draft a concise, professional update based on the input. Focus solely on crafting the update without providing commentary or explanations.";
 
     try {
         const data = {
             model: "gpt-4o-mini",
-            store: true,
+            store: false,
             messages: [
                 { role: 'assistant', content: prompt},
-                { role: 'user', content: context }
+                { role: 'user', content: `write an update: ${context}` }
             ],
-            temperature: 0.7
+            temperature: 0.1
         }
 
         const response = await fetch(url, 

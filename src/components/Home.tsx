@@ -4,7 +4,7 @@ import { useRef } from "react"
 const Home = () => {
   let context: string | null;
   const textAreaRef = useRef<HTMLDivElement | null>(null)
-  const resultAreaRef = useRef<HTMLDivElement | null>(null)
+  const resultAreaRef = useRef<HTMLPreElement | null>(null)
 
   const onSubmit = async () => {
   
@@ -38,7 +38,9 @@ const Home = () => {
       textAreaRef.current.innerHTML = '';
     }
     if(resultAreaRef.current) {
-      resultAreaRef.current.innerHTML = `${response} <br /><br /><br /><br /><br /><br />`
+      console.log(response)
+      const formatedText = response.replace(/\\n/g, '\n');
+      resultAreaRef.current.innerHTML = `${formatedText} <br /><br /><br /><br /><br /><br />`
     }
   }
 
@@ -47,8 +49,8 @@ const Home = () => {
         <h2>Update Master AI</h2>
         <div className="main-area">
 
-          <div className="result-area" ref={resultAreaRef} aria-placeholder="Welcome to Update MAster AI.." />
-
+          <pre className="result-area" ref={resultAreaRef} aria-placeholder="Welcome to Update MAster AI.." />
+    
           <div className="input-container">
             <div 
             className="textarea" 
