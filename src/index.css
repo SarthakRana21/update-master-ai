@@ -14,6 +14,9 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
+body {
+  display: flex;
+}
 #root {
   width: 355px;
   height: 555px;
