@@ -1,14 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { getCookie, setCookie } from "../cookies/cookies";
 import Loader from "./Loader";
 import CopyText from "./CopyText";
 
 const Home = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [copyVisible, setCopyVisible] = useState<boolean>(false);
-  const textAreaRef = useRef<HTMLDivElement | null>(null);
-  const resultAreaRef = useRef<HTMLDivElement | null>(null);
   const [context, setContext] = useState<string | null>(null);
   const [clipboardText, setClipboardText] = useState<string | null>('')
+
+  const textAreaRef = useRef<HTMLDivElement | null>(null);
+  const resultAreaRef = useRef<HTMLDivElement | null>(null);
 
   // On submit Function
   const onSubmit = async () => {
@@ -56,6 +58,25 @@ const Home = () => {
     }
   };
 
+  // Copy text component
+  const CopyTextComp: React.FC = () => {
+   return (<div className="absolute z-20 right-8 top-6 p-2">
+      <CopyText text={clipboardText} />
+    </div>)
+  }
+
+  const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const name = "userInputValue"
+    setCookie({name, value})
+  } 
+  const handleResultOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const name = "resultValue"
+    setCookie({name, value})
+  } 
+
+  // use Effect for loader
   useEffect(() => {
     if (typeof context === "string") {
       setCopyVisible(true);
@@ -64,6 +85,20 @@ const Home = () => {
     }
   }, [context]);
 
+  // useEffect for cookiePookie
+  useEffect(() => {
+    getCookie("resultValue", (cookie) => {
+      if (cookie) {
+        if(resultAreaRef.current) resultAreaRef.current.textContent = cookie
+      } 
+    })
+    getCookie("userInputValue", (cookie) => {
+      if(cookie) {
+        if(textAreaRef.current) textAreaRef.current.textContent = cookie
+      }
+    })
+  }, [])
+
   return (
     // Root Container
     <div className="w-full h-full flex flex-col items-center justify-between">
@@ -71,7 +106,9 @@ const Home = () => {
 
       {/* Main container */}
       <div className="flex flex-col h-full w-full items-center justify-between relative">
-        {copyVisible && context && !loading && <div className="absolute z-20 right-8 top-6 p-2"><CopyText text={clipboardText} /></div> }
+        {/* copy button */}
+        {copyVisible && context && !loading && <CopyTextComp />}
+        {/* Loader */}
         <div className="absolute z-20 top-28">
           {loading && <Loader />}
         </div>
@@ -81,6 +118,7 @@ const Home = () => {
           className="block max-w-[320px] min-w-[320px] h-[300px] overflow-auto whitespace-pre-wrap cursor-text break-words my-5 z-9 bg-[#333333] p-[7px] px-2.5 rounded-lg"
           ref={resultAreaRef}
           aria-placeholder="Welcome to Update Master AI..."
+          onChange={handleResultOnChange}
         />
 
         {/* User Input Area */}
@@ -90,6 +128,7 @@ const Home = () => {
             contentEditable="plaintext-only"
             ref={textAreaRef}
             aria-placeholder="Enter your message here!"
+            onChange={handleInputOnChange}
           />
         </div>
       </div>
