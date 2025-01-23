@@ -10,7 +10,8 @@
         "scripting",
         "tabs",
         "nativeMessaging",
-        "storage"
+        "storage",
+        "cookies"
     ],
     "background": {
         "service_worker": "assets/background.js"
