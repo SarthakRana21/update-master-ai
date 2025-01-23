@@ -65,13 +65,15 @@ const Home = () => {
     </div>)
   }
 
-  const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const handleInputOnChange = (e: React.ChangeEvent<HTMLDivElement>) => {
+    const value = e.target.textContent || '';
     const name = "userInputValue"
+    console.log(value)
     setCookie({name, value})
   } 
-  const handleResultOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const handleResultOnChange = (e: React.ChangeEvent<HTMLDivElement>) => {
+    const value = e.target.textContent || '';
+    console.log(value)
     const name = "resultValue"
     setCookie({name, value})
   } 
@@ -118,7 +120,7 @@ const Home = () => {
           className="block max-w-[320px] min-w-[320px] h-[300px] overflow-auto whitespace-pre-wrap cursor-text break-words my-5 z-9 bg-[#333333] p-[7px] px-2.5 rounded-lg"
           ref={resultAreaRef}
           aria-placeholder="Welcome to Update Master AI..."
-          onChange={handleResultOnChange}
+          onInput={handleResultOnChange}
         />
 
         {/* User Input Area */}
@@ -128,7 +130,7 @@ const Home = () => {
             contentEditable="plaintext-only"
             ref={textAreaRef}
             aria-placeholder="Enter your message here!"
-            onChange={handleInputOnChange}
+            onInput={handleInputOnChange}
           />
         </div>
       </div>
