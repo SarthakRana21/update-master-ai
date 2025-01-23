@@ -1,10 +1,6 @@
-export interface cookiePookie {
-    name: string;
-    value?: string;
-}
 const DefaultURL = "http://localhost";
 
-export async function setCookie({ name, value }: cookiePookie) {
+export async function setCookie(name:string, value:string) {
     await chrome.cookies.set({
         url: DefaultURL,
         name: name,

@@ -18,7 +18,7 @@ const Home = () => {
       resultAreaRef.current.innerHTML = "";
     }
     setLoading(true);
-
+    setCookie("userInputValue", "")
     let currentContext: string | null = null;
 
     if (textAreaRef.current) {
@@ -51,9 +51,10 @@ const Home = () => {
   const setResponse = (response: string) => {
     setLoading(false);
     if (resultAreaRef.current) {
-      console.log(response);
       const formattedText = response.replace(/\\n/g, "\n");
       resultAreaRef.current.innerHTML = `${formattedText} <br /><br /><br /><br /><br /><br />`;
+      const name = "resultValue";
+      setCookie(name, formattedText)
       setClipboardText(formattedText)
     }
   };
@@ -66,18 +67,24 @@ const Home = () => {
   }
 
   const handleInputOnChange = (e: React.ChangeEvent<HTMLDivElement>) => {
-    const value = e.target.textContent || '';
+    const value = e.target.textContent || ' ';
     const name = "userInputValue"
-    console.log(value)
-    setCookie({name, value})
-  } 
-  const handleResultOnChange = (e: React.ChangeEvent<HTMLDivElement>) => {
-    const value = e.target.textContent || '';
-    console.log(value)
-    const name = "resultValue"
-    setCookie({name, value})
+    setCookie(name, value)
   } 
 
+  // fetch all cookies
+  const fetchCookies = async () => {
+    await getCookie("resultValue", (cookie) => {
+      if (cookie) {
+        if(resultAreaRef.current) resultAreaRef.current.textContent = cookie
+      } 
+    })
+    await getCookie("userInputValue", (cookie) => {
+      if(cookie) {
+        if(textAreaRef.current) textAreaRef.current.textContent = cookie
+      }
+    })
+  }
   // use Effect for loader
   useEffect(() => {
     if (typeof context === "string") {
@@ -85,21 +92,13 @@ const Home = () => {
     } else {
       setCopyVisible(false);
     }
+    
   }, [context]);
 
-  // useEffect for cookiePookie
   useEffect(() => {
-    getCookie("resultValue", (cookie) => {
-      if (cookie) {
-        if(resultAreaRef.current) resultAreaRef.current.textContent = cookie
-      } 
-    })
-    getCookie("userInputValue", (cookie) => {
-      if(cookie) {
-        if(textAreaRef.current) textAreaRef.current.textContent = cookie
-      }
-    })
+    fetchCookies()
   }, [])
+
 
   return (
     // Root Container
@@ -120,7 +119,7 @@ const Home = () => {
           className="block max-w-[320px] min-w-[320px] h-[300px] overflow-auto whitespace-pre-wrap cursor-text break-words my-5 z-9 bg-[#333333] p-[7px] px-2.5 rounded-lg"
           ref={resultAreaRef}
           aria-placeholder="Welcome to Update Master AI..."
-          onInput={handleResultOnChange}
+          // onChange={handleResultOnChange}
         />
 
         {/* User Input Area */}
