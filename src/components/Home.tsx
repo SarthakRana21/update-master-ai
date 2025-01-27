@@ -1,36 +1,35 @@
 import React, { useEffect, useRef, useState } from "react";
 import Loader from "./Loader";
 import CopyText from "./CopyText";
+import { getStorage } from "./storageFC";
+// import { setStorage, getStorage } from "./storageFC";
 
 const Home = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [copyVisible, setCopyVisible] = useState<boolean>(false);
-  const [context, setContext] = useState<string | null>(null);
-  const [clipboardText, setClipboardText] = useState<string | null>('')
+  // const [copyVisible, setCopyVisible] = useState<boolean>(false);
+  const [context, setContext] = useState<string>('');
+  const [clipboardText, setClipboardText] = useState<string | null>(null)
+  const [port, setPort] = useState<chrome.runtime.Port | null>(null)
 
   const textAreaRef = useRef<HTMLDivElement | null>(null);
   const resultAreaRef = useRef<HTMLDivElement | null>(null);
 
   // On submit Function
   const onSubmit = async () => {
+
     if (resultAreaRef.current) {
       resultAreaRef.current.innerHTML = "";
     }
-    setLoading(true);
-    let currentContext: string | null = null;
-
     if (textAreaRef.current) {
-      currentContext = textAreaRef.current.innerHTML;
       textAreaRef.current.innerHTML = "";
     }
-
-    setContext(currentContext);
+    setLoading(true);
 
     if (chrome && chrome.runtime) {
       chrome.runtime.sendMessage(
         {
           type: "apiRequest",
-          payload: { context: currentContext },
+          payload: { context: context },
         },
         (response) => {
           if (response.success) {
@@ -43,36 +42,74 @@ const Home = () => {
     } else {
       console.error("Chrome.runtime not found");
     }
+    port?.postMessage({key: 'textAreaContext', value: ''})
   };
 
   // Set Response from OpenAI function
-  const setResponse = (response: string) => {
+  const setResponse = async (response: string) => {
     setLoading(false);
     if (resultAreaRef.current) {
       const formattedText = response.replace(/\\n/g, "\n");
-      resultAreaRef.current.innerHTML = `${formattedText} <br /><br /><br /><br /><br /><br />`;
+      resultAreaRef.current.innerHTML = `${formattedText} <br /><br /><br /><br /><br />`;
       setClipboardText(formattedText)
+      // console.log('set loading', response)
+      port?.postMessage({key: 'resultAreaContext', value: response})
     }
   };
 
   const handleInputOnChange = (e: React.ChangeEvent<HTMLDivElement>) => {
-    const value = e.target.textContent || ' ';
-    const name = "userInputValue"
-    console.log(`name: ${name}, value: ${value}`)
+    const value = e.target.textContent || '';
+    setContext(value)
+    port?.postMessage({key: 'textAreaContext', value: value})
   } 
 
   // use Effect for loader
-  useEffect(() => {
-    if (typeof context === "string") {
-      setCopyVisible(true);
-    } else {
-      setCopyVisible(false);
-    }
+  // useEffect(() => {
+  //   if (clipboardText) {
+  //     setCopyVisible(true);
+  //   } else {
+  //     setCopyVisible(false);
+  //   }
     
-  }, [context]);
+  // }, [clipboardText]);
+
+  // use effect to set storage
+  useEffect(() => {
+    getStorage('textAreaContext')
+      .then((res) => {
+        // setContext(res as string)
+        if(textAreaRef.current) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const data = res as any
+          if(data) textAreaRef.current.innerHTML = res as string
+        }
+      })
+
+    getStorage('resultAreaContext')
+      .then((res) => {
+        if(resultAreaRef.current) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const data = res as any
+          if(data){
+            resultAreaRef.current.innerHTML = res as string
+            setClipboardText(data)
+          }
+        }
+      })
+
+    const port = chrome.runtime.connect({name: "popup"}); 
+    setPort(port)
+
+    // port.postMessage({value: 'onMount', context: context})
+
+    return () => {
+      console.log('disconnection..')
+      port.disconnect();
+    }
+  }, [])
 
   
-  // Copy text component
+  // Copy text component with position absolute
   const CopyTextComp: React.FC = () => {
     return (
       <div className="absolute z-20 right-8 top-6 p-2">
@@ -90,7 +127,7 @@ const Home = () => {
       {/* Main container */}
       <div className="flex flex-col h-full w-full items-center justify-between relative">
         {/* copy button */}
-        {copyVisible && context && !loading && <CopyTextComp />}
+        {clipboardText && !loading && <CopyTextComp />}
         {/* Loader */}
         <div className="absolute z-20 top-28">
           {loading && <Loader />}

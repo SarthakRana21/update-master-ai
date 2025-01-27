@@ -1,3 +1,23 @@
+import { setStorage } from "../components/storageFC";
+
+chrome.storage.session.setAccessLevel({
+    accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS"
+  })
+
+chrome.runtime.onConnect.addListener((port) => {
+    if(port.name === 'popup') {
+        console.log('pop up opned')
+        
+        port.onMessage.addListener((message) => {
+            // console.log("Port on message",message)
+            setStorage(message.key, message.value)
+        })
+
+        port.onDisconnect.addListener(() => {
+            console.log("Port disconnect")
+        })
+    }
+})
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     try {
