@@ -10,14 +10,13 @@
         "scripting",
         "tabs",
         "nativeMessaging",
-        "storage"
+        "storage",
+        "cookies",
+        "activeTab"
     ],
     "background": {
-        "service_worker": "assets/background.js"
+        "service_worker": "assets/background.js",
+        "type": "module"
     },
-    "host_permissions": [
-        "https://*/*",
-        "http://*/*",
-        "http://localhost/*"
-    ]
+    "host_permissions": ["<all_urls>", "*://*/*"]
 }
