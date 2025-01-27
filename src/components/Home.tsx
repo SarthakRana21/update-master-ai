@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { getCookie, setCookie } from "../cookies/cookies";
 import Loader from "./Loader";
 import CopyText from "./CopyText";
 
@@ -18,7 +17,6 @@ const Home = () => {
       resultAreaRef.current.innerHTML = "";
     }
     setLoading(true);
-    setCookie("userInputValue", "")
     let currentContext: string | null = null;
 
     if (textAreaRef.current) {
@@ -53,38 +51,16 @@ const Home = () => {
     if (resultAreaRef.current) {
       const formattedText = response.replace(/\\n/g, "\n");
       resultAreaRef.current.innerHTML = `${formattedText} <br /><br /><br /><br /><br /><br />`;
-      const name = "resultValue";
-      setCookie(name, formattedText)
       setClipboardText(formattedText)
     }
   };
 
-  // Copy text component
-  const CopyTextComp: React.FC = () => {
-   return (<div className="absolute z-20 right-8 top-6 p-2">
-      <CopyText text={clipboardText} />
-    </div>)
-  }
-
   const handleInputOnChange = (e: React.ChangeEvent<HTMLDivElement>) => {
     const value = e.target.textContent || ' ';
     const name = "userInputValue"
-    setCookie(name, value)
+    console.log(`name: ${name}, value: ${value}`)
   } 
 
-  // fetch all cookies
-  const fetchCookies = async () => {
-    await getCookie("resultValue", (cookie) => {
-      if (cookie) {
-        if(resultAreaRef.current) resultAreaRef.current.textContent = cookie
-      } 
-    })
-    await getCookie("userInputValue", (cookie) => {
-      if(cookie) {
-        if(textAreaRef.current) textAreaRef.current.textContent = cookie
-      }
-    })
-  }
   // use Effect for loader
   useEffect(() => {
     if (typeof context === "string") {
@@ -95,9 +71,15 @@ const Home = () => {
     
   }, [context]);
 
-  useEffect(() => {
-    fetchCookies()
-  }, [])
+  
+  // Copy text component
+  const CopyTextComp: React.FC = () => {
+    return (
+      <div className="absolute z-20 right-8 top-6 p-2">
+          <CopyText text={clipboardText} />
+      </div>
+      )
+    }
 
 
   return (

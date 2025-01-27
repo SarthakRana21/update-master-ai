@@ -1,28 +1,36 @@
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-    if(message.type === 'apiRequest') {
-        try {
-            const { context }= message.payload;
-            handleApiRequest(context)
-            .then((response) => {
-                sendResponse({success: true, data: response})
-                console.log(response)
-            })
-            .catch((error) => {
-                sendResponse({success: false, error: error.message})
-            })
-            return true
-        } catch (error) {
-            console.log(error)
-        }
-    }
 
-})
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    try {
+        switch (message.type) {
+            case 'apiRequest': {
+                const { context } = message.payload;
+                handleApiRequest(context)
+                    .then((response) => {
+                        sendResponse({ success: true, data: response });
+                        console.log('API Response:', response);
+                    })
+                    .catch((error) => {
+                        sendResponse({ success: false, error: error.message });
+                        console.error('API Request Error:', error);
+                    });
+                return true; // Keep the message channel open for async response
+            }
+
+            default: {
+                console.warn('Unhandled message type:', message.type);
+            }
+        }
+    } catch (error) {
+        console.error('Error in message listener:', error);
+        sendResponse({ success: false});
+    }
+});
 
 
 async function handleApiRequest(context: string) {
     const url = "https://api.openai.com/v1/chat/completions";
 
-    const prompt ="Analyze the provided context and draft a concise, professional update based on the input. Focus solely on crafting the update without providing commentary or explanations.";
+    const prompt ="Analyze the provided user input create a corporate update based on the input, keep it on point, precise and professional use easy words.";
 
     try {
         const data = {
@@ -30,7 +38,7 @@ async function handleApiRequest(context: string) {
             store: false,
             messages: [
                 { role: 'assistant', content: prompt},
-                { role: 'user', content: `write an update: ${context}` }
+                { role: 'user', content: `write it better: ${context}` }
             ],
             temperature: 0.1
         }
