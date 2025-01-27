@@ -7,7 +7,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        background: 'src/background/fetchResponse.ts', 
+        background: 'src/background/background.ts', 
         popup: 'index.html',   
       },
     },
