@@ -27,7 +27,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
                 handleApiRequest(context)
                     .then((response) => {
                         sendResponse({ success: true, data: response });
-                        console.log('API Response:', response);
+                        // console.log('API Response:', response);
                     })
                     .catch((error) => {
                         sendResponse({ success: false, error: error.message });
@@ -50,7 +50,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 async function handleApiRequest(context: string) {
     const url = "https://api.openai.com/v1/chat/completions";
 
-    const prompt ="Analyze the provided user input create a corporate update based on the input, keep it on point, precise and professional use easy words.";
+    const prompt ="You are Update Master ai agent Analyze the provided context and draft a clear, concise, and professional corporate update or repy. Ensure the tone is formal, the content is straight to the point, and avoid unnecessary details or flair. Focus on delivering key information effectively.";
 
     try {
         const data = {
@@ -58,7 +58,7 @@ async function handleApiRequest(context: string) {
             store: false,
             messages: [
                 { role: 'assistant', content: prompt},
-                { role: 'user', content: `write it better: ${context}` }
+                { role: 'user', content: `context: ${context}` }
             ],
             temperature: 0.1
         }

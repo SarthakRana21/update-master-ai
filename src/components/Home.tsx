@@ -2,11 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import Loader from "./Loader";
 import CopyText from "./CopyText";
 import { getStorage } from "./storageFC";
-// import { setStorage, getStorage } from "./storageFC";
 
 const Home = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  // const [copyVisible, setCopyVisible] = useState<boolean>(false);
   const [context, setContext] = useState<string>('');
   const [clipboardText, setClipboardText] = useState<string | null>(null)
   const [port, setPort] = useState<chrome.runtime.Port | null>(null)
@@ -63,16 +61,6 @@ const Home = () => {
     port?.postMessage({key: 'textAreaContext', value: value})
   } 
 
-  // use Effect for loader
-  // useEffect(() => {
-  //   if (clipboardText) {
-  //     setCopyVisible(true);
-  //   } else {
-  //     setCopyVisible(false);
-  //   }
-    
-  // }, [clipboardText]);
-
   // use effect to set storage
   useEffect(() => {
     getStorage('textAreaContext')
@@ -99,8 +87,6 @@ const Home = () => {
 
     const port = chrome.runtime.connect({name: "popup"}); 
     setPort(port)
-
-    // port.postMessage({value: 'onMount', context: context})
 
     return () => {
       console.log('disconnection..')
@@ -138,7 +124,6 @@ const Home = () => {
           className="block max-w-[320px] min-w-[320px] h-[300px] overflow-auto whitespace-pre-wrap cursor-text break-words my-5 z-9 bg-[#333333] p-[7px] px-2.5 rounded-lg"
           ref={resultAreaRef}
           aria-placeholder="Welcome to Update Master AI..."
-          // onChange={handleResultOnChange}
         />
 
         {/* User Input Area */}
