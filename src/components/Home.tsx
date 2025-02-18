@@ -31,7 +31,8 @@ const Home = () => {
         },
         (response) => {
           if (response.success) {
-            setResponse(response.data.choices[0].message.content);
+            setResponse(response.data.choices[0].message.content)
+            // setResponse(response.data.contextReceived);
           } else {
             console.error("API Error:", response.error);
           }
@@ -107,7 +108,7 @@ const Home = () => {
 
   return (
     // Root Container
-    <div className="w-full h-full flex flex-col items-center justify-between">
+    <div className="w-full h-screen flex flex-col items-center justify-between">
       <h1 className="text-2xl font-semibold mt-4">Update Master AI</h1>
 
       {/* Main container */}
@@ -121,7 +122,7 @@ const Home = () => {
 
         {/* Result Area */}
         <div
-          className="block max-w-[320px] min-w-[320px] h-[300px] overflow-auto whitespace-pre-wrap cursor-text break-words my-5 z-9 bg-[#333333] p-[7px] px-2.5 rounded-lg"
+          className="block max-w-[320px] min-w-[320px] h-4/5 overflow-auto whitespace-pre-wrap cursor-text break-words my-5 z-9 bg-[#333333] p-[7px] px-2.5 rounded-lg"
           ref={resultAreaRef}
           aria-placeholder="Welcome to Update Master AI..."
         />
@@ -129,7 +130,7 @@ const Home = () => {
         {/* User Input Area */}
         <div className="flex flex-col-reverse w-full items-center mb-5">
           <div
-            className="absolute block w-80 min-h-[20px] max-h-[150px] border border-whitesmoke overflow-auto outline-none rounded-lg p-[7px] px-2.5 cursor-text break-words z-10 bg-[#2b2b2b]"
+            className="absolute block w-80 min-h-[20px] max-h-[250px] border border-whitesmoke overflow-auto outline-none rounded-lg p-[7px] px-2.5 cursor-text break-words z-10 bg-[#2b2b2b]"
             contentEditable="plaintext-only"
             ref={textAreaRef}
             aria-placeholder="Enter your message here!"
