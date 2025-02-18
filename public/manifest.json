@@ -4,7 +4,9 @@
     "version": "1.0",
     "description": "Generate quick updates or emails based on context.",
     "action": {
-        "default_popup": "index.html"
+        "default_popup": "index.html",
+        "default_title": "Click to open Update Master"
+
     },
     "permissions": [
         "scripting",
@@ -12,11 +14,15 @@
         "nativeMessaging",
         "storage",
         "cookies",
-        "activeTab"
+        "activeTab",
+        "sidePanel"
     ],
     "background": {
         "service_worker": "assets/background.js",
         "type": "module"
     },
+    "side_panel": {
+        "default_path": "index.html"
+      },
     "host_permissions": ["<all_urls>", "*://*/*"]
 }
