@@ -1,5 +1,10 @@
 import { setStorage } from "../components/storageFC";
 
+chrome.sidePanel
+  .setPanelBehavior({ openPanelOnActionClick: true })
+  .catch((error) => console.error(error));
+
+  
 chrome.storage.session.setAccessLevel({
     accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS"
   })
@@ -25,6 +30,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
             case 'apiRequest': {
                 const { context } = message.payload;
                 handleApiRequest(context)
+                // fetchResponse(context)
                     .then((response) => {
                         sendResponse({ success: true, data: response });
                         // console.log('API Response:', response);
@@ -50,7 +56,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 async function handleApiRequest(context: string) {
     const url = "https://api.openai.com/v1/chat/completions";
 
-    const prompt ="You are Update Master ai agent Analyze the provided context and draft a clear, concise, and professional corporate update or repy. Ensure the tone is formal, the content is straight to the point, and avoid unnecessary details or flair. Focus on delivering key information effectively.";
+    const prompt ="You are an assistant. Analyze the provided context and draft a clear update. Ensure the tone is formal, use layman language, the content is straight to the point, and avoid unnecessary details or flair. Focus on delivering key information effectively. save tokens";
 
     try {
         const data = {
@@ -83,3 +89,27 @@ async function handleApiRequest(context: string) {
         console.error('handleApiRequesterror', error)
     }
 }
+
+// async function fetchResponse(context:string) {
+//     const url = "http://localhost:3000/api/v1/master"
+//     try {
+//         const response = await fetch(url, {
+//             method: "POST",
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({
+//                 'context': context
+//             })
+//         })
+
+//         if(!response.ok) {
+//             console.error('error in response', response);
+//         }
+//         const data = await response.json()
+//         return data;
+
+//     } catch (error) {
+//         console.log("fetchRequest Error: ", error)
+//     }
+// }
