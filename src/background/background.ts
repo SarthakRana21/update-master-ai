@@ -56,7 +56,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 async function handleApiRequest(context: string) {
     const url = "https://api.openai.com/v1/chat/completions";
 
-    const prompt ="You are an assistant. Analyze the provided context and draft a clear update. Ensure the tone is formal, use layman language, the content is straight to the point, and avoid unnecessary details or flair. Focus on delivering key information effectively. save tokens";
+    const prompt ="You are an assistant. Analyze the provided context and draft a clear update, use human language, the content is straight to the point, and avoid unnecessary details or flair. Focus on delivering key information effectively. save tokens. no bold text save tokens";
 
     try {
         const data = {
@@ -64,7 +64,7 @@ async function handleApiRequest(context: string) {
             store: false,
             messages: [
                 { role: 'assistant', content: prompt},
-                { role: 'user', content: `context: ${context}` }
+                { role: 'user', content: `context: write it simple ${context}` }
             ],
             temperature: 0.1
         }
