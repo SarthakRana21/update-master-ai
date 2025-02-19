@@ -49,10 +49,11 @@ const Home = () => {
     setLoading(false);
     if (resultAreaRef.current) {
       const formattedText = response.replace(/\\n/g, "\n");
-      resultAreaRef.current.innerHTML = `${formattedText} <br /><br /><br /><br /><br />`;
+      const finalText = `${formattedText} <br /><br /><br /><br /><br /><br />`;
+      resultAreaRef.current.innerHTML = finalText
       setClipboardText(formattedText)
       // console.log('set loading', response)
-      port?.postMessage({key: 'resultAreaContext', value: response})
+      port?.postMessage({key: 'resultAreaContext', value: finalText})
     }
   };
 
@@ -108,15 +109,15 @@ const Home = () => {
 
   return (
     // Root Container
-    <div className="w-full h-screen flex flex-col items-center justify-between">
+    <div className="w-full h-screen flex flex-col items-center">
       <h1 className="text-2xl font-semibold mt-4">Update Master AI</h1>
 
       {/* Main container */}
-      <div className="flex flex-col h-full w-full items-center justify-between relative">
+      <div className="flex flex-col h-5/6 w-full items-center justify-start relative gap-20">
         {/* copy button */}
         {clipboardText && !loading && <CopyTextComp />}
         {/* Loader */}
-        <div className="absolute z-20 top-28">
+        <div className="absolute z-20 top-56">
           {loading && <Loader />}
         </div>
 
@@ -130,7 +131,7 @@ const Home = () => {
         {/* User Input Area */}
         <div className="flex flex-col-reverse w-full items-center mb-5">
           <div
-            className="absolute block w-80 min-h-[20px] max-h-[250px] border border-whitesmoke overflow-auto outline-none rounded-lg p-[7px] px-2.5 cursor-text break-words z-10 bg-[#2b2b2b]"
+            className="absolute block w-80 min-h-[20px] max-h-[200px] border border-whitesmoke overflow-auto outline-none rounded-lg p-[7px] px-2.5 cursor-text break-words z-10 bg-[#2b2b2b]"
             contentEditable="plaintext-only"
             ref={textAreaRef}
             aria-placeholder="Enter your message here!"
