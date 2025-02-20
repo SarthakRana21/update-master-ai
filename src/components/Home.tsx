@@ -117,7 +117,7 @@ const Home = () => {
         {/* copy button */}
         {clipboardText && !loading && <CopyTextComp />}
         {/* Loader */}
-        <div className="absolute z-20 top-56">
+        <div className="absolute z-20 top-1/3">
           {loading && <Loader />}
         </div>
 
